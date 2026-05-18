@@ -8,14 +8,18 @@ use App\Models\Buku;
 
 class BukuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        //cara 1 query builder
-        //$dataBuku = DB::table('buku')->get();
-        //cara 2 ORM
-        
-        $dataBuku = Buku::orderBy('id', 'desc')->get();
-        //dd($dataBuku);
+
+        $search = $request->keyword;
+
+        $dataBuku = Buku::when($search, function($query, $search){
+            return $query->where('judul', 'like', "%{$search}%")
+            ->orWhere('penulis', 'like', "%{$search}%");
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(5)
+        ->withQueryString();
 
         return view('pages.buku.daftar-buku', compact('dataBuku'));
     }

@@ -11,8 +11,16 @@
             </div>
         @endif
         <div class="card p-3">
-            <div class="mb-2">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <a href="{{ route('form-create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+
+                <form class="d-flex align-items-center gap-2">
+                    <div class="input-group input-group-sm" width="250px">
+                        <input name="keyword" type="text" class="form-control" placeholder="Cari data">
+                        <button class="btn btn-sm btn-success" type="submit">Cari</button>
+                    </div>
+                </form>
+
             </div>
             <table class="table table-hover table-bordered table-striped">
                 <thead>
@@ -26,9 +34,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($dataBuku as $item)
+                    @forelse ($dataBuku as $index => $item)
                         <tr>
-                            <td scope="row" class="text-center">{{ $loop->iteration }}</td>
+                            <td scope="row" class="text-center">{{ $dataBuku->firstItem() + $index }}</td>
                             <td>{{ $item->judul }}</td>
                             <td>{{ $item->penulis }}</td>
                             <td>{{ $item->tahun_terbit }}</td>
@@ -36,9 +44,9 @@
                             <td class="text-ceter">
 
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#hapus{{ $item->id }}">
-                                    Hapus Versi modal
+                                    Hapus
                                 </button>
 
                                 <a href="{{ route('edit-buku', ['id' => $item->id]) }}" class="btn btn-warning btn-sm"><i
@@ -78,9 +86,16 @@
                                 </form>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6">
+                                <span class="text-danger">data yang anda cari tidak ada</span>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+            {{ $dataBuku->links() }}
         </div>
     </div>
 @endsection

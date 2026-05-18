@@ -17,4 +17,14 @@ class Buku extends Model
 
     //inisialisasi kolom yang tidak boleh diisi
     protected $guarded = ['id'];
+
+    public function detail(){
+        return $this->hasOne(DetailBuku::class, 'buku_id', 'id');
+    }
+
+    public function kategori()
+    {
+        # 1 buku milik 1 kategori (inverse)        
+        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');        
+    }    
 }
