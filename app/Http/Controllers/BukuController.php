@@ -5,21 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Buku;
+use App\Models\DetailBuku;
 
 class BukuController extends Controller
 {
     public function index(Request $request)
     {
+        
+
+        #cara pertama
+        #detail buku dari buku
+        $buku = Buku::find(1);//select * from buku where id=1
+        //dd($buku->detail->isbn);
+
+        #buku dari detail
+        $detail = DetailBuku::find(3); //select * from detail_buku where buku_id=3;
+        // dd($detail->buku->judul);//select * from buku where id=3
+
+        $buku = Buku::with('detail')->find(4);
+        //dd($buku->detail->isbn ?? '-');
 
         $search = $request->keyword;
 
-        $dataBuku = Buku::when($search, function($query, $search){
-            return $query->where('judul', 'like', "%{$search}%")
-            ->orWhere('penulis', 'like', "%{$search}%");
-        })
-        ->orderBy('id', 'desc')
-        ->paginate(5)
-        ->withQueryString();
+        $dataBuku = Buku::with(['detail', 'kategori'])
+                        ->when($search, function($query, $search){
+                            return $query->where('judul', 'like', "%{$search}%")
+                                ->orWhere('penulis', 'like', "%{$search}%")
+                                ->orWhere('tahun_terbit', 'like', "%{$search}%")
+                                ->orWhereHas('detail', function($q2) use ($search){
+                                    $q2->where('isbn', 'like', "%{$search}%");
+                                })
+                                ->orWhereHas('kategori', function($q2) use ($search){
+                                    $q3->where('nama_kategori', 'like', "%{$search}%");
+                            });
+                        })
+                        ->orderBy('id', 'desc')
+                        ->paginate(10)
+                        ->withQueryString();
 
         return view('pages.buku.daftar-buku', compact('dataBuku'));
     }

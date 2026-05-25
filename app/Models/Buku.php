@@ -22,6 +22,8 @@ class Buku extends Model
         return $this->hasOne(DetailBuku::class, 'buku_id', 'id');
     }
 
+    #select * from buku, detail_buku where buku.id=detail_buku.buku.id
+
     public function kategori()
     {
         # 1 buku milik 1 kategori (inverse)        

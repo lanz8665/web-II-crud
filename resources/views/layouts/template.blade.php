@@ -36,20 +36,32 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
+                    @if (Auth::user()->role == 'operator')
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('/beranda') }}">Beranda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/profil') }}">Profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('tentang-kami') }}">Tentang Kami</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('produk') }}">Produk Kami</a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'admin')
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('/beranda') }}">Beranda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('buku') }}">Buku</a>
+                        </li>
+                    @endif
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url('/beranda') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/profil') }}">Profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('tentang-kami') }}">Tentang Kami</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('produk') }}">Produk Kami</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('buku') }}">Buku</a>
+                        <a class="nav-link" href="{{ url('logout') }}">Logout</a>
                     </li>
                 </ul>
             </div>
